@@ -5,7 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Únete a Sicaf Loyalty</title>
+
+    <meta property="og:title" content="¡Te invitaron a ganar premios!">
+    <meta property="og:description" content="Descarga la app y empieza a ganar recompensas increíbles">
+    <meta property="og:image" content="https://picsum.photos/seed/picsum/1200/630">
+    <meta property="og:type" content="website">
+
+    <title>Únete a Monedero Sicaf</title>
     
     <style>
         * {
@@ -22,12 +28,13 @@
             align-items: center;
             justify-content: center;
             color: white;
+            padding: 1rem;
         }
         
         .container {
             text-align: center;
-            padding: 2rem;
             max-width: 500px;
+            width: 100%;
         }
         
         .logo {
@@ -41,6 +48,12 @@
             justify-content: center;
             font-size: 48px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         
         h1 {
@@ -49,52 +62,142 @@
             font-weight: 700;
         }
         
-        p {
+        .subtitle {
             font-size: 1.1rem;
             opacity: 0.9;
             margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+        
+        .cta-button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+        }
+        
+        .cta-button:active {
+            transform: translateY(0);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .cta-button.loading {
+            pointer-events: none;
+            opacity: 0.8;
         }
         
         .spinner {
-            width: 50px;
-            height: 50px;
-            margin: 2rem auto;
-            border: 4px solid rgba(255,255,255,0.3);
-            border-top-color: white;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-top-color: #667eea;
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            display: none;
+        }
+        
+        .cta-button.loading .spinner {
+            display: inline-block;
+        }
+        
+        .cta-button.loading .button-text {
+            display: none;
         }
         
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         
-        .error {
-            background: rgba(255,255,255,0.2);
+        .status-message {
+            margin-top: 1.5rem;
             padding: 1rem;
             border-radius: 10px;
-            margin-top: 1rem;
+            font-size: 0.95rem;
+            display: none;
+        }
+        
+        .status-message.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+            display: block;
+        }
+        
+        .status-message.error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+            display: block;
+        }
+        
+        .info-box {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
         }
         
         .debug {
-            background: rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.3);
             padding: 1rem;
             border-radius: 10px;
             margin-top: 1rem;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-align: left;
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .platform-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="logo">🎁</div>
-        <h1>¡Te han invitado!</h1>
-        <p>Redirigiendo a la tienda de aplicaciones...</p>
-        <div class="spinner"></div>
-        <div id="status"></div>
-        <div id="debug" class="debug" style="display: none;"></div>
+        <h1>¡Te han invitado a Monedero Sicaf!</h1>
+        <p class="subtitle">
+            Has recibido una invitación especial.<br>
+            Descarga la app y obtén beneficios exclusivos.
+        </p>
+        
+        <button id="downloadBtn" class="cta-button">
+            <span class="button-text" id="buttonText">Descargar App</span>
+            <div class="spinner"></div>
+        </button>
+        
+        <div id="platformBadge" class="platform-badge" style="display: none;"></div>
+        
+        <div id="statusMessage" class="status-message"></div>
+        
+        <div class="info-box">
+            💡 Al descargar la app, tu código de invitación se aplicará automáticamente
+        </div>
+        
+        <div id="debug" class="debug"></div>
     </div>
 
     <script>
@@ -107,18 +210,28 @@
             debugMode: true // Cambiar a false en producción
         };
 
+        let linkId = null;
+        let platform = 'unknown';
+
         function log(message) {
             console.log(message);
             if (CONFIG.debugMode) {
                 const debugDiv = document.getElementById('debug');
                 debugDiv.style.display = 'block';
-                debugDiv.innerHTML += message + '<br>';
+                debugDiv.innerHTML += `${new Date().toLocaleTimeString()}: ${message}<br>`;
+                debugDiv.scrollTop = debugDiv.scrollHeight;
             }
         }
 
-        function showError(message) {
-            document.getElementById('status').innerHTML = 
-                `<div class="error">❌ ${message}</div>`;
+        function showStatus(message, type = 'success') {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.textContent = message;
+            statusDiv.className = `status-message ${type}`;
+        }
+
+        function hideStatus() {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.className = 'status-message';
         }
 
         // Extraer el parámetro 'ref' de la URL
@@ -139,84 +252,167 @@
                 return 'ios';
             }
             
-            return 'unknown';
+            return 'desktop';
         }
 
-        // Redirigir a Android (Play Store con referrer)
-        function redirectAndroid(linkId) {
-            log('📱 Plataforma: Android');
-            log(`🔗 LinkId: ${linkId}`);
+        // Copiar al clipboard para iOS
+        async function copyToClipboard(text) {
+            log('Intentando copiar al clipboard...');
             
-            // Construir URL con referrer parameter
+            try {
+                //Clipboard API moderna
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(text);
+                    log('Copiado con Clipboard API');
+                    return true;
+                }
+            } catch (err) {
+                log(`Clipboard API falló: ${err.message}`);
+            }
+            
+            // Fallback con textarea
+            try {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.top = '0';
+                textarea.style.left = '0';
+                textarea.style.width = '2em';
+                textarea.style.height = '2em';
+                textarea.style.padding = '0';
+                textarea.style.border = 'none';
+                textarea.style.outline = 'none';
+                textarea.style.boxShadow = 'none';
+                textarea.style.background = 'transparent';
+                
+                document.body.appendChild(textarea);
+                textarea.focus();
+                textarea.select();
+                
+                const successful = document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                if (successful) {
+                    log('Copiado con execCommand (fallback)');
+                    return true;
+                } else {
+                    log('execCommand falló');
+                    return false;
+                }
+            } catch (err) {
+                log(`Fallback falló: ${err.message}`);
+                return false;
+            }
+        }
+
+        // Manejar descarga para Android
+        async function handleAndroidDownload() {
+            log('Procesando descarga para Android');
+            
             const referrerParam = `linkId=${encodeURIComponent(linkId)}`;
             const playStoreUrl = `${CONFIG.playStoreUrl}?id=${CONFIG.androidPackageId}&referrer=${encodeURIComponent(referrerParam)}`;
             
-            log(`🌐 Redirigiendo a: ${playStoreUrl}`);
+            log(`URL: ${playStoreUrl}`);
+            
+            showStatus('Redirigiendo a Play Store...', 'success');
             
             setTimeout(() => {
                 window.location.href = playStoreUrl;
-            }, 1500);
+            }, 1000);
         }
 
-        // Redirigir a iOS (App Store con clipboard)
-        async function redirectIOS(linkId) {
-            log('📱 Plataforma: iOS');
-            log(`🔗 LinkId: ${linkId}`);
+        // Manejar descarga para iOS
+        async function handleIOSDownload() {
+            log('Procesando descarga para iOS');
             
             const clipboardText = `REFERRAL:${linkId}`;
+            log(`Texto a copiar: ${clipboardText}`);
             
-            try {
-                // Intentar copiar al clipboard (requiere interacción del usuario en algunos navegadores)
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    await navigator.clipboard.writeText(clipboardText);
-                    log('✅ Copiado al clipboard: ' + clipboardText);
-                } else {
-                    log('⚠️ Clipboard API no disponible');
-                }
-            } catch (err) {
-                log('⚠️ Error copiando al clipboard: ' + err.message);
+            // Copiar al clipboard
+            const copied = await copyToClipboard(clipboardText);
+            
+            if (copied) {
+                showStatus('Código de invitación copiado. Redirigiendo...', 'success');
+            } else {
+                showStatus('No se pudo copiar automáticamente. Redirigiendo...', 'error');
             }
             
             const appStoreUrl = `${CONFIG.appStoreUrl}/${CONFIG.iosAppId}`;
-            log(`🌐 Redirigiendo a: ${appStoreUrl}`);
+            log(`URL: ${appStoreUrl}`);
             
             setTimeout(() => {
                 window.location.href = appStoreUrl;
             }, 1500);
         }
 
-        // Función principal
-        async function main() {
-            log('🚀 Iniciando redirección...');
+        // Manejar click del botón
+        async function handleDownload() {
+            log('Botón presionado');
             
-            // 1. Obtener el código de referido
-            const linkId = getReferralCode();
+            const button = document.getElementById('downloadBtn');
+            button.classList.add('loading');
             
-            if (!linkId) {
-                log('❌ No se encontró parámetro ref en la URL');
-                showError('Link inválido. Por favor solicita un nuevo link de invitación.');
-                return;
-            }
-            
-            log(`✅ LinkId extraído: ${linkId}`);
-            
-            // 2. Detectar plataforma
-            const platform = detectPlatform();
-            log(`✅ Plataforma detectada: ${platform}`);
-            
-            // 3. Redirigir según plataforma
-            if (platform === 'android') {
-                redirectAndroid(linkId);
-            } else if (platform === 'ios') {
-                await redirectIOS(linkId);
-            } else {
-                log('❌ Plataforma no soportada: ' + navigator.userAgent);
-                showError('Por favor abre este link desde un dispositivo Android o iOS.');
+            try {
+                if (platform === 'android') {
+                    await handleAndroidDownload();
+                } else if (platform === 'ios') {
+                    await handleIOSDownload();
+                } else {
+                    showStatus('Por favor abre este link desde un dispositivo móvil (Android o iOS)', 'error');
+                    button.classList.remove('loading');
+                }
+            } catch (error) {
+                log(`Error: ${error.message}`);
+                showStatus('Ocurrió un error. Por favor intenta de nuevo.', 'error');
+                button.classList.remove('loading');
             }
         }
 
+        // Inicializar página
+        function init() {
+            log('Inicializando página...');
+            
+            // 1. Obtener linkId
+            linkId = getReferralCode();
+            
+            if (!linkId) {
+                log('No se encontró parámetro ref en la URL');
+                showStatus('Link inválido. Por favor solicita un nuevo link de invitación.', 'error');
+                document.getElementById('downloadBtn').disabled = true;
+                return;
+            }
+            
+            log(`LinkId encontrado: ${linkId}`);
+            
+            // Detectar plataforma
+            platform = detectPlatform();
+            log(`Plataforma detectada: ${platform}`);
+            
+            // Actualizar UI según plataforma
+            const button = document.getElementById('downloadBtn');
+            const badge = document.getElementById('platformBadge');
+            
+            if (platform === 'android') {
+                button.innerHTML = '<span class="button-text">Descargar en Play Store</span><div class="spinner"></div>';
+                badge.textContent = '🤖 Android';
+                badge.style.display = 'inline-block';
+            } else if (platform === 'ios') {
+                button.innerHTML = '<span class="button-text">Descargar en App Store</span><div class="spinner"></div>';
+                badge.textContent = '🍎 iOS';
+                badge.style.display = 'inline-block';
+            } else {
+                button.innerHTML = '<span class="button-text">Abrir en móvil</span><div class="spinner"></div>';
+                showStatus('Por favor abre este link desde tu teléfono móvil', 'error');
+            }
+            
+            // Agregar event listener al botón
+            button.addEventListener('click', handleDownload);
+            
+            log('Inicialización completa');
+        }
+
         // Ejecutar al cargar la página
-        window.addEventListener('load', main);
+        window.addEventListener('load', init);
     </script>
 </body>
 </html>
