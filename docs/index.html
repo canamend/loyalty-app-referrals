@@ -8,7 +8,7 @@
 
     <meta property="og:title" content="¡Te invitaron a ganar premios!">
     <meta property="og:description" content="Descarga la app y empieza a ganar recompensas increíbles">
-    <meta property="og:image" content="https://picsum.photos/seed/picsum/1200/630">
+    <meta property="og:image" content="https://wallet-promotion-images.s3.us-east-1.amazonaws.com/banner-sucursal.png">
     <meta property="og:type" content="website">
 
     <title>Únete a Monedero Sicaf</title>
@@ -29,6 +29,22 @@
             justify-content: center;
             color: white;
             padding: 1rem;
+        }
+
+        .app-logo {
+            width: 160px;
+            max-width: 70%;
+            margin: 0 auto 1.5rem;
+            display: block;
+        }
+
+        .branch-banner {
+            width: 100%;
+            max-width: 480px;
+            border-radius: 16px;
+            margin: 0 auto 1.5rem;
+            display: block;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
         }
         
         .container {
@@ -177,7 +193,17 @@
 </head>
 <body>
     <div class="container">
-        <div class="logo">🎁</div>
+        <img
+          src="https://tudominio.com/images/logo-sicaf-rojo.png"
+          alt="Monedero Sicaf"
+          class="app-logo"
+        />
+        <!-- <div class="logo">🎁</div> -->
+        <img
+          src="https://wallet-promotion-images.s3.us-east-1.amazonaws.com/banner-sucursal.png"
+          alt="Sucursal Sicaf"
+          class="branch-banner"
+        />
         <h1>¡Te han invitado a Monedero Sicaf!</h1>
         <p class="subtitle">
             Has recibido una invitación especial.<br>
