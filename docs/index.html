@@ -77,11 +77,40 @@
             margin-bottom: 1rem;
             font-weight: 700;
         }
+
+        .scroll-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            color: #667eea;
+            border-radius: 999px;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            gap: 0.4rem;
+            z-index: 999;
+            animation: pulse 1.5s infinite;
+        }
+
+        .scroll-indicator span {
+            font-size: 1.2rem;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
         
         .subtitle {
             font-size: 1rem;
             opacity: 0.9;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             text-align: left;
             line-height: 1.5;
         }
@@ -231,6 +260,9 @@
         </div>
         
         <div id="debug" class="debug"></div>
+    </div>
+    <div id="scrollIndicator" class="scroll-indicator">
+        <span>⬇️</span> Descargar
     </div>
 
     <script>
@@ -440,12 +472,55 @@
             
             // Agregar event listener al botón
             button.addEventListener('click', handleDownload);
+
+            // Scroll indicator
+            window.addEventListener('scroll', handleScrollIndicator);
+            window.addEventListener('resize', handleScrollIndicator);
+
+            document
+              .getElementById('scrollIndicator')
+              .addEventListener('click', scrollToDownload);
+
+            // Ejecutar una vez al inicio
+            handleScrollIndicator();
             
             log('Inicialización completa');
         }
 
         // Ejecutar al cargar la página
         window.addEventListener('load', init);
+
+
+        function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+            );
+        }
+
+        function handleScrollIndicator() {
+            const downloadBtn = document.getElementById('downloadBtn');
+            const indicator = document.getElementById('scrollIndicator');
+
+            if (!downloadBtn) return;
+
+            if (isElementInViewport(downloadBtn)) {
+                indicator.style.display = 'none';
+            } else {
+                indicator.style.display = 'flex';
+            }
+        }
+
+        function scrollToDownload() {
+            const downloadBtn = document.getElementById('downloadBtn');
+            if (!downloadBtn) return;
+
+            downloadBtn.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
     </script>
 </body>
 </html>
